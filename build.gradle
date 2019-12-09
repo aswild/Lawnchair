@@ -49,6 +49,13 @@ android {
             keyAlias "Lawnchair"
             keyPassword localProps.getProperty("keyPass") ?:System.getenv("KEY_PASSWORD")
         }
+
+        local {
+            storeFile file(localProps.getProperty("storeFile"))
+            storePassword localProps.getProperty("storePassword")
+            keyAlias localProps.getProperty("keyAlias")
+            keyPassword localProps.getProperty("keyPassword")
+        }
     }
     defaultConfig {
         minSdkVersion 21
@@ -104,7 +111,7 @@ android {
                 matchingFallbacks = ['debug']
             }
 
-            buildConfigField "boolean", "HAS_LEAKCANARY", isPublicBuild ? "false" : "true"
+            //buildConfigField "boolean", "HAS_LEAKCANARY", isPublicBuild ? "false" : "true"
         }
 
         optimized {
@@ -199,6 +206,16 @@ android {
             buildConfigField "boolean", "HAS_LEAKCANARY", "false"
             buildConfigField "boolean", "DEBUG_STRICT_MODE", "false"
         }
+
+        wild {
+            dimension "build"
+            applicationIdSuffix ".wild"
+            signingConfig signingConfigs.local
+
+            buildConfigField "boolean", "FEATURE_BUG_REPORTER", "false"
+            buildConfigField "boolean", "HAS_LEAKCANARY", "false"
+            buildConfigField "boolean", "DEBUG_STRICT_MODE", "false"
+        }
     }
 
     sourceSets {
@@ -257,6 +274,10 @@ android {
             res.srcDirs = ['lawnchair/res']
             java.srcDirs = ['lawnchair/src']
             manifest.srcFile "lawnchair/AndroidManifest.xml"
+        }
+
+        wild {
+            res.srcDirs = ['wild/res']
         }
     }
 
